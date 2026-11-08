@@ -2550,8 +2550,32 @@ function buildFromRows(rows){
   });
   if(!root || !byId.size) return null;
 
+  /* סדר חודשים עברי לצורך מיון ילדים לפי יום הולדת.
+     אדר-א' קודם לאדר/אדר-ב' (שבאים לפני ניסן) */
+  const HEB_MONTH_ORDER = {
+    'תשרי':1,'חשון':2,'כסלו':3,'טבת':4,'שבט':5,
+    'אדר א':6,'אדר-א':6,'אדר-א\'':6,
+    'אדר':7,'אדר ב':7,'אדר-ב':7,'אדר-ב\'':7,
+    'ניסן':8,'אייר':9,'סיון':10,'תמוז':11,'אב':12,'אלול':13
+  };
+  const dateSortKey = node => {
+    /* משתמשים בתאריך של הצד שיש לו לידה — אם יש אב מועד בלידה, שלו; אחרת של האם/זוג */
+    const d = node.date || node.spouseDate || '';
+    const parsed = parseHebDate(d);
+    if(!parsed) return [999, 999];
+    return [HEB_MONTH_ORDER[parsed.month] || 999, parsed.day || 999];
+  };
   const sortKids = node=>{
-    node.kids.sort((a,b)=> (a.order-b.order) || (Number(a.id)-Number(b.id)));
+    node.kids.sort((a,b)=> {
+      /* קודם לפי Order ידני אם הוגדר (לא אפס), אחרת לפי יום הולדת, אחרת לפי ID */
+      const ao = Number(a.order)||0, bo = Number(b.order)||0;
+      if(ao || bo) return ao - bo;
+      const [am, ad] = dateSortKey(a);
+      const [bm, bd] = dateSortKey(b);
+      if(am !== bm) return am - bm;
+      if(ad !== bd) return ad - bd;
+      return Number(a.id) - Number(b.id);
+    });
     node.kids.forEach(sortKids);
   };
   sortKids(root);
