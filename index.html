@@ -1106,7 +1106,7 @@ summary:hover .b-avatar{rotate:-8deg;scale:1.1}
     <button class="tab-btn" id="tabBtnEvents"><span>🎂</span> <span class="tab-full">אירועי החודש</span><span class="tab-short">אירועים</span></button>
     <button class="tab-btn" id="tabBtnTree"><span>🌳</span> <span class="tab-full">עץ המשפחה</span><span class="tab-short">עץ</span></button>
   </nav>
-  <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>✦ ככוכבי השמים ✦ שבט המרטונים ✦ בלי עין הרע ✦ עמו"ש בבריאות ושמחה ✦</span><span>✦ ככוכבי השמים ✦ שבט המרטונים ✦ בלי עין הרע ✦ עמו"ש בבריאות ושמחה ✦</span><span>✦ ככוכבי השמים ✦ שבט המרטונים ✦ בלי עין הרע ✦ עמו"ש בבריאות ושמחה ✦</span><span>✦ ככוכבי השמים ✦ שבט המרטונים ✦ בלי עין הרע ✦ עמו"ש בבריאות ושמחה ✦</span></div></div>
+  <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>✦ ככוכבי השמים ✦ שבט הונקרטים ✦ בלי עין הרע ✦ עמו"ש בבריאות ושמחה ✦</span><span>✦ ככוכבי השמים ✦ שבט הונקרטים ✦ בלי עין הרע ✦ עמו"ש בבריאות ושמחה ✦</span><span>✦ ככוכבי השמים ✦ שבט הונקרטים ✦ בלי עין הרע ✦ עמו"ש בבריאות ושמחה ✦</span><span>✦ ככוכבי השמים ✦ שבט הונקרטים ✦ בלי עין הרע ✦ עמו"ש בבריאות ושמחה ✦</span></div></div>
 
   <div class="panel active" id="panel-names">
   <div class="wrap">
@@ -1992,7 +1992,7 @@ function buildEvents(){
           'יהי רצון שתזכה להיות חסיד ירא שמיים ולמדן, ללכת תמיד בדרך אבותיך הקדושים,',
           'מתוך שמחה וטוב לבב.',
           'באהבה רבה',
-          'שבט המרטונים'
+          'שבט הונקרטים'
         ];
       } else if(ageNum === 12 && !male){
         blessingLines = [
@@ -2002,7 +2002,7 @@ function buildEvents(){
           `הולכת בדרך אמותייך הצדקניות מתוך שמחה ואהבת ה',`,
           'ותזכי לבנות בית נאמן בישראל מתוך שמחה וטוב לבב.',
           'באהבה רבה',
-          'שבט המרטונים'
+          'שבט הונקרטים'
         ];
       } else {
         blessingLines = [
@@ -2011,7 +2011,7 @@ function buildEvents(){
           'עמו"ש בבריאות ושמחה.',
           `ימלא ה' משאלות ליבך לטובה ולברכה.`,
           'באהבה רבה',
-          'שבט המרטונים'
+          'שבט הונקרטים'
         ];
       }
       const blessing = `<div class="bday-blessing">${blessingLines.map(l=>`<div>${l}</div>`).join('')}</div>`;
@@ -2161,7 +2161,7 @@ function buildEvents(){
       events.filter(e=>e.h.day > curDay && e.h.day <= curDay + 7).forEach(e=>items.push('🎈 ' + when(e.h.day - curDay) + ': ' + full(e)));
       annivs.filter(e=>e.h.day > curDay && e.h.day <= curDay + 7).forEach(e=>items.push('💍 ' + when(e.h.day - curDay) + ': ' + couple(e)));
     }
-    items.push('ככוכבי השמים', 'שבט המרטונים', 'בלי עין הרע', 'עמו"ש בבריאות ושמחה');
+    items.push('ככוכבי השמים', 'שבט הונקרטים', 'בלי עין הרע', 'עמו"ש בבריאות ושמחה');
     const seg = items.map(esc).join(' ✦ ') + ' ✦';
     track.innerHTML = '<span>' + seg + '</span>'.repeat(1) + '<span>' + seg + '</span>';
     track.style.setProperty('--dur', Math.max(22, Math.round(seg.length * 0.2)) + 's');
