@@ -2559,19 +2559,23 @@ function buildFromRows(rows){
     'ניסן':8,'אייר':9,'סיון':10,'תמוז':11,'אב':12,'אלול':13
   };
   const dateSortKey = node => {
-    /* משתמשים בתאריך של הצד שיש לו לידה — אם יש אב מועד בלידה, שלו; אחרת של האם/זוג */
-    const d = node.date || node.spouseDate || '';
-    const parsed = parseHebDate(d);
-    if(!parsed) return [999, 999];
-    return [HEB_MONTH_ORDER[parsed.month] || 999, parsed.day || 999];
+    /* לוקחים את התאריך המוקדם מבין האב והאם כדי שהמיון יעבוד גם לזוגות */
+    const dA = parseHebDate(node.date || '');
+    const dB = parseHebDate(node.spouseDate || '');
+    const toKey = p => p ? [p.year || 9999, HEB_MONTH_ORDER[p.month] || 99, p.day || 99] : [9999, 99, 99];
+    const kA = toKey(dA), kB = toKey(dB);
+    /* בוחרים את המוקדם מבין השניים לצורך מיון */
+    return (kA[0] < kB[0] || (kA[0] === kB[0] && kA[1] < kB[1]) ||
+            (kA[0] === kB[0] && kA[1] === kB[1] && kA[2] <= kB[2])) ? kA : kB;
   };
   const sortKids = node=>{
     node.kids.sort((a,b)=> {
-      /* קודם לפי Order ידני אם הוגדר (לא אפס), אחרת לפי יום הולדת, אחרת לפי ID */
+      /* קודם לפי Order ידני אם הוגדר (לא אפס), אחרת לפי שנה-חודש-יום, אחרת לפי ID */
       const ao = Number(a.order)||0, bo = Number(b.order)||0;
       if(ao || bo) return ao - bo;
-      const [am, ad] = dateSortKey(a);
-      const [bm, bd] = dateSortKey(b);
+      const [ay, am, ad] = dateSortKey(a);
+      const [by, bm, bd] = dateSortKey(b);
+      if(ay !== by) return ay - by;
       if(am !== bm) return am - bm;
       if(ad !== bd) return ad - bd;
       return Number(a.id) - Number(b.id);
