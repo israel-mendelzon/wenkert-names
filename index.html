@@ -611,6 +611,83 @@ details.branch.hidden{display:none}
   padding:22px;max-width:500px;margin:0 auto 40px;
   text-align:center;transform:rotate(-1deg);
 }
+/* ---- בלון "חוגגים היום" במסך הראשי ---- */
+.today-balloon{
+  position:relative;
+  background:linear-gradient(145deg,#fff8e1,#fff3c4);
+  color:#2a1810;
+  border:3px solid #e6c56a;
+  border-radius:28px;
+  padding:22px 20px 18px;
+  max-width:540px;
+  margin:18px auto 24px;
+  box-shadow:0 14px 28px rgba(230,197,106,.35), 0 4px 10px rgba(0,0,0,.08);
+  text-align:center;
+  overflow:visible;
+  animation: balloonFloat 4.5s ease-in-out infinite;
+}
+@keyframes balloonFloat {
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50%     { transform: translateY(-6px) rotate(1deg); }
+}
+.today-balloon-tail{
+  position:absolute; bottom:-14px; right:50%;
+  width:22px; height:22px;
+  background:linear-gradient(145deg,#fff8e1,#fff3c4);
+  border-right:3px solid #e6c56a;
+  border-bottom:3px solid #e6c56a;
+  transform: translateX(50%) rotate(45deg);
+}
+.today-balloon-stars{
+  position:absolute; inset:0; pointer-events:none; overflow:hidden;
+  border-radius:28px;
+}
+.today-balloon-stars span{
+  position:absolute; font-size:22px; opacity:.85;
+  animation: balloonFloatEmoji 6s ease-in-out infinite;
+}
+.today-balloon-stars span:nth-child(1){ top:8%; right:10%; animation-delay:-0.5s }
+.today-balloon-stars span:nth-child(2){ top:14%; left:8%; animation-delay:-2s }
+.today-balloon-stars span:nth-child(3){ top:40%; right:6%; animation-delay:-3.5s; font-size:18px }
+.today-balloon-stars span:nth-child(4){ bottom:16%; left:12%; animation-delay:-1s }
+.today-balloon-stars span:nth-child(5){ bottom:8%; right:14%; animation-delay:-4s; font-size:18px }
+.today-balloon-stars span:nth-child(6){ top:28%; left:4%; animation-delay:-5s }
+@keyframes balloonFloatEmoji {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50%     { transform: translateY(-8px) rotate(6deg); }
+}
+.today-balloon-label{
+  font-size:18px; font-weight:900; color:#b35a00;
+  letter-spacing:.3px; margin-bottom:10px;
+  position:relative; z-index:1;
+}
+.today-balloon-content{position:relative; z-index:1}
+.today-balloon-content .today-row{
+  padding:8px 0;
+  display:flex; flex-direction:column; align-items:center; text-align:center;
+}
+.today-balloon-content .today-row + .today-row{border-top:1px dashed rgba(230,197,106,.55); margin-top:8px}
+.today-balloon-content .today-name-line{
+  font-weight:800; font-size:17px; color:#2a1810;
+}
+.today-balloon-content .today-age{color:#b35a00; font-weight:700; font-size:14px}
+.today-balloon-content .today-meta-line,
+.today-balloon-content .today-fam-line{
+  font-size:13px; color:#6d5a2e; margin-top:2px;
+}
+.today-balloon-content .bday-blessing{
+  margin-top:8px; padding:10px 12px;
+  background:rgba(255,255,255,.65);
+  border-radius:14px;
+  font-size:13.5px; line-height:1.6; color:#3a2410;
+  border:1px dashed rgba(230,197,106,.7);
+}
+.today-balloon-content .bday-blessing > div:first-child{font-weight:800; color:#b35a00}
+@media (max-width:420px){
+  .today-balloon{padding:18px 14px 14px; margin:10px auto 18px}
+  .today-balloon-label{font-size:16px}
+  .today-balloon-content .today-name-line{font-size:15px}
+}
 .today-label{font-size:16px;font-weight:800;color:#ff9f43;display:block;margin-bottom:8px}
 .today-content{color:var(--ink)}
 .today-name-line{font-size:22px;font-weight:800;line-height:1.3}
@@ -1129,6 +1206,15 @@ summary:hover .b-avatar{rotate:-8deg;scale:1.1}
         <button class="print-btn" id="printBtn"><span>🖨️</span><span>הורדת הרשימה כ־PDF</span></button>
       </div>
     </header>
+
+    <section class="today-balloon hidden" id="homeTodayBalloon" aria-label="חוגגים היום">
+      <div class="today-balloon-tail" aria-hidden="true"></div>
+      <div class="today-balloon-stars" aria-hidden="true">
+        <span>🎈</span><span>🎉</span><span>✨</span><span>🎂</span><span>🎊</span><span>🥳</span>
+      </div>
+      <div class="today-balloon-label">🥳 חוגגים היום</div>
+      <div class="today-balloon-content" id="homeTodayContent"></div>
+    </section>
 
     <section class="matriarch" id="matriarchBox" aria-label="ראש המשפחה">
       <span class="hero-corner tl" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 20 C2 9 9 2 20 2 M2 2 L2 12 M2 2 L12 2"/><circle cx="2" cy="2" r="2.2" fill="currentColor" stroke="none"/></svg></span>
@@ -2044,13 +2130,23 @@ function buildEvents(){
     }).join('');
     document.getElementById('todayContent').innerHTML = birthdayRows + annivRows;
     todayCard.classList.remove('hidden');
+    /* כפילות של התוכן גם לבלון במסך הראשי (טאב השמות) */
+    const homeBalloon = document.getElementById('homeTodayBalloon');
+    const homeContent = document.getElementById('homeTodayContent');
+    if(homeBalloon && homeContent){
+      homeContent.innerHTML = birthdayRows + annivRows;
+      homeBalloon.classList.remove('hidden');
+    }
     /* זוהר חגיגי — פעם אחת בלבד לסשן, כדי שלא יחזור על עצמו בכל render (חיפוש, סנכרון וכו') */
     if(!todayCelebrated){
       todayCelebrated = true;
       setTimeout(()=>sparkleBurst(todayCard), 350);
+      if(homeBalloon) setTimeout(()=>sparkleBurst(homeBalloon), 500);
     }
   } else {
     todayCard.classList.add('hidden');
+    const homeBalloon = document.getElementById('homeTodayBalloon');
+    if(homeBalloon) homeBalloon.classList.add('hidden');
   }
 
   const grid = document.getElementById('eventGrid');
