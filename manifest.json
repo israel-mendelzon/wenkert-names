@@ -1,4 +1,5 @@
 {
+  "id": "/wenkert-names/",
   "name": "משפחת ונקרט — שמות המשפחה",
   "short_name": "משפחת ונקרט",
   "description": "רשימת שמות משפחת ונקרט לתפילה, אירועי החודש ועץ המשפחה",
@@ -6,8 +7,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#142720",
-  "theme_color": "#142720",
+  "background_color": "#1f3b2e",
+  "theme_color": "#1f3b2e",
   "lang": "he",
   "dir": "rtl",
   "icons": [
