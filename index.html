@@ -1898,14 +1898,16 @@ function greetBlockHTML(id, personLabel){
   </span>`;
 }
 
-document.getElementById('panel-events').addEventListener('click', e=>{
+/* מאזינים על הדוקומנט ולא על panel-events בלבד — כי הברכה מוצגת גם בבלון במסך הראשי */
+document.addEventListener('click', e=>{
   const toggle = e.target.closest('.greet-toggle');
   if(toggle){
-    const panel = document.getElementById('greetPanel-' + toggle.dataset.pkey);
+    /* פותחים/סוגרים את החלונית שסמוכה לכפתור הזה (עובד גם אם יש כמה מופעים של אותו pkey) */
+    const wrap = toggle.closest('.greet-wrap');
+    const panel = wrap && wrap.querySelector('.greet-panel');
     if(panel) panel.classList.toggle('hidden');
     return;
   }
-  /* שיתוף הברכה שכתובה כרגע בטופס (גם אם עוד לא נשלחה לאתר) ישירות דרך וואטסאפ */
   const waBtn = e.target.closest('.greet-wa-btn');
   if(waBtn){
     const form = waBtn.closest('.greet-form');
@@ -1921,7 +1923,7 @@ document.getElementById('panel-events').addEventListener('click', e=>{
     }
   }
 });
-document.getElementById('panel-events').addEventListener('submit', async e=>{
+document.addEventListener('submit', async e=>{
   const form = e.target.closest('.greet-form');
   if(!form) return;
   e.preventDefault();
@@ -1938,20 +1940,22 @@ document.getElementById('panel-events').addEventListener('submit', async e=>{
     if(res && res.ok){
       try{ localStorage.setItem('wenkertGreeterName', name); }catch(err){}
       (GREETINGS[pkey] = GREETINGS[pkey] || []).push({name, message});
-      const panel = document.getElementById('greetPanel-' + pkey);
-      const listEl = panel && panel.querySelector('.greet-list');
-      if(listEl){
-        const empty = listEl.querySelector('.greet-empty');
-        if(empty) empty.remove();
-        const item = document.createElement('div');
-        item.className = 'greet-item';
-        const b = document.createElement('b');
-        b.textContent = name + ':';
-        item.append(b, document.createTextNode(' ' + message));
-        listEl.appendChild(item);
-      }
-      const toggleBtn = document.querySelector(`.greet-toggle[data-pkey="${CSS.escape(pkey)}"]`);
-      if(toggleBtn) toggleBtn.textContent = `💬 ברכות (${GREETINGS[pkey].length})`;
+      /* מעדכנים את כל ההופעות של אותו pkey (גם בכרטיס האירועים וגם בבלון המסך הראשי) */
+      document.querySelectorAll(`.greet-toggle[data-pkey="${CSS.escape(pkey)}"]`).forEach(btn => {
+        btn.textContent = `💬 ברכות (${GREETINGS[pkey].length})`;
+        const wrap = btn.closest('.greet-wrap');
+        const listEl = wrap && wrap.querySelector('.greet-list');
+        if(listEl){
+          const empty = listEl.querySelector('.greet-empty');
+          if(empty) empty.remove();
+          const item = document.createElement('div');
+          item.className = 'greet-item';
+          const b = document.createElement('b');
+          b.textContent = name + ':';
+          item.append(b, document.createTextNode(' ' + message));
+          listEl.appendChild(item);
+        }
+      });
       msgInput.value = '';
     }
   }catch(err){ /* שקט — אפשר לנסות שוב */ }
