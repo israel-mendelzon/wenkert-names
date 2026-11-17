@@ -2,7 +2,7 @@
    מטמון "app shell" לפתיחה מהירה ולעבודה אופליין.
    נתוני הגיליון (script.google.com) לעולם לא נשמרים במטמון — תמיד מהרשת, כדי להישאר עדכניים.
    קוד האתר עצמו (index.html) — קודם מהרשת (עדכונים מגיעים מיד), מטמון רק כגיבוי אופליין. */
-const CACHE = 'wenkert-app-v7-balloon-greet';
+const CACHE = 'wenkert-app-v8-kid-head';
 const ASSETS = [
   './',
   './index.html',
