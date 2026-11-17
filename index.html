@@ -1508,7 +1508,7 @@ function eventAddChildBtnHTML(id){
 
 function kidHTML(p, fam){
   const f = famOf(p.n, fam);
-  let h = `<div class="kid">` + rowHTML(p.n, p.d, '', '', f, p.dd, editBtnHTML(p));
+  let h = `<div class="kid">` + rowHTML(p.n, p.d, 'head', '', f, p.dd, editBtnHTML(p));
   if(p.s) h += rowHTML(p.s.n, p.s.d, '', p.s.r, f, p.s.dd);
   if(p.c && p.c.length){
     h += `<div class="kids">` + p.c.map(k=>kidHTML(k, f)).join('') + `</div>`;
